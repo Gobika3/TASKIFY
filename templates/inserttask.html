@@ -1,0 +1,227 @@
+{% extends "layout.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %}
+
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#myModal"
+  style="float: right"
+>
+  Add Group
+</button>
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Add Group</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form
+          action="/insertgroupsdetails"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="mb-3">
+            <label for="groupname" class="form-label">GROUP NAME</label>
+            <input
+              type="text"
+              class="form-control"
+              id="groupname"
+              name="groupname"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="groupimage" class="form-label">GROUP IMAGE</label>
+            <input
+              type="file"
+              class="form-control"
+              id="groupimage"
+              name="groupimage"
+              accept="image/*"
+              required
+            />
+          </div>
+
+          <!-- Dynamic User Addition -->
+          <div class="mb-3">
+            <label for="users" class="form-label">Add Users</label>
+            <div id="userList">
+              <div class="input-group mb-2">
+                <select name="users[]" class="form-control user-select">
+                  <option value="">-- Select User --</option>
+                  {% for u in user %}
+                  <option value="{{ u[0] }}">{{ u[3] }}</option>
+                  {% endfor %}
+                </select>
+                <button type="button" class="btn btn-danger removeUser">
+                  X
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-secondary mt-2" id="addUser">
+              Add More Users
+            </button>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="submit" class="btn btn-primary">Save Group</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Task Form -->
+<div class="container mt-5" style="width: 50%">
+  <h1>Task</h1>
+  <form action="/inserttask" method="POST">
+    <div class="mb-3">
+      <label for="task_name" class="form-label">Task Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="task_name"
+        name="task_name"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <input
+        type="text"
+        class="form-control"
+        id="description"
+        name="description"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="priority" class="form-label">Priority</label>
+      <select class="form-select" id="priority" name="priority">
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="start_date" class="form-label">Start Date</label>
+      <input
+        type="date"
+        class="form-control"
+        id="start_date"
+        name="start_date"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="end_date" class="form-label">End Date</label>
+      <input
+        type="date"
+        class="form-control"
+        id="end_date"
+        name="end_date"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="reminder" class="form-label">Reminder</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        id="reminder"
+        name="reminder"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="created_by_id" class="form-label">Created By</label>
+      <input
+        type="text"
+        class="form-control"
+        id="created_by_id"
+        name="created_by_id"
+        value="{{ session['username'] }}"
+        readonly
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="assign_to" class="form-label">Assign To (User)</label>
+      <select class="form-select" id="assign_to" name="assign_to">
+        <option>Select user</option>
+        {% for ur in user %}
+        <option value="{{ ur[0] }}">{{ ur[3] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="groupid" class="form-label">Assign To (Group)</label>
+      <select class="form-select" id="groupid" name="assign_to_group">
+        <option>Select group</option>
+        {% for ur in group %}
+        <option value="{{ ur[0] }}">{{ ur[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Task</button>
+  </form>
+</div>
+
+<!-- JavaScript for dynamic user addition/removal -->
+<script>
+  document.getElementById("addUser").addEventListener("click", function () {
+    let userList = document.getElementById("userList");
+    let userDiv = document.createElement("div");
+    userDiv.classList.add("input-group", "mb-2");
+
+    userDiv.innerHTML = `
+      <select name="users[]" class="form-control user-select">
+        <option value="">-- Select User --</option>
+        {% for u in user %}
+          <option value="{{ u[0] }}">{{ u[3] }}</option>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn btn-danger removeUser">X</button>
+    `;
+
+    userList.appendChild(userDiv);
+  });
+
+  document.getElementById("userList").addEventListener("click", function (e) {
+    if (e.target.classList.contains("removeUser")) {
+      e.target.parentElement.remove();
+    }
+  });
+</script>
+
+{% endblock %}

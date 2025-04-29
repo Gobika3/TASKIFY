@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block title %}Update Profile{% endblock %} {%
+block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Update Profile</h2>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <form method="POST" action="/updateprofile">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            value="{{ user[3] }}"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ user[4] }}"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label"
+            >New Password (optional)</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+          />
+          <small class="form-text text-muted"
+            >Leave blank if you do not want to change it.</small
+          >
+        </div>
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Update Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

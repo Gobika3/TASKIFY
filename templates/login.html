@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Taskify - Home</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/homepage.css') }}"
+    />
+    
+  </head>
+  <body>
+    <!-- NAVIGATION BAR -->
+    <header class="navbar">
+      <div class="navbar-brand">TASKIFY</div>
+      <ul class="navbar-menu">
+        <li><a href="#" onclick="openModal('loginModal')">Login</a></li>
+      </ul>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+      <!-- HERO SECTION -->
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Welcome to Taskify</h1>
+          <p>
+            Smart task management and collaborative event planning at your
+            fingertips.
+          </p>
+          <a href="#" class="btn" onclick="openModal('registerModal')"
+            >Get Started</a
+          >
+        </div>
+      </section>
+
+      <!-- FEATURES SECTION -->
+      <section class="features">
+        <h2>Features</h2>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Collaborative Tasks</h3>
+            <p>Assign tasks, track progress, and collaborate seamlessly.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Real-time Chat</h3>
+            <p>
+              Communicate instantly with your team and stay on the same page.
+            </p>
+          </div>
+          <div class="feature-item">
+            <h3>Event Planning</h3>
+            <p>Plan events with smart scheduling, reminders, and alerts.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p style="color: white">&copy; 2025 Taskify. All rights reserved.</p>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('loginModal')">&times;</span>
+        <h2>Login</h2>
+        <form method="POST" action="/">
+          <input type="text" name="username" placeholder="Username" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <button type="submit">Login</button>
+        </form>
+        <p>
+          Don't have an account?
+          <a href="#" onclick="switchModal('loginModal', 'registerModal')"
+            >Register</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div id="registerModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('registerModal')">&times;</span>
+        <h2>Register</h2>
+        <form method="POST" action="/register">
+          <input type="text" name="username" placeholder="Username" required />
+          <input type="email" name="email" placeholder="Email" required />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <input
+            type="password"
+            name="confirm_password"
+            placeholder="Confirm Password"
+            required
+          />
+          <button type="submit">Register</button>
+        </form>
+        <p>
+          Already have an account?
+          <a href="#" onclick="switchModal('registerModal', 'loginModal')"
+            >Login</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- JAVASCRIPT FOR MODALS -->
+    <script>
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
+
+      function switchModal(closeId, openId) {
+        closeModal(closeId);
+        openModal(openId);
+      }
+
+      window.onclick = function (event) {
+        let loginModal = document.getElementById("loginModal");
+        let registerModal = document.getElementById("registerModal");
+        if (event.target === loginModal) closeModal("loginModal");
+        if (event.target === registerModal) closeModal("registerModal");
+      };
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Edit Task{% endblock %}
+{% block content %}
+<h2>Edit Task</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label for="task_name" class="form-label">Task Name</label>
+        <input type="text" class="form-control" name="task_name" value="{{ task[1] }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" name="description" required>{{ task[2] }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="priority" class="form-label">Priority</label>
+        <select class="form-select" name="priority" required>
+            <option value="Low" {% if task[3]=='Low' %}selected{% endif %}>Low</option>
+            <option value="Medium" {% if task[3]=='Medium' %}selected{% endif %}>Medium</option>
+            <option value="High" {% if task[3]=='High' %}selected{% endif %}>High</option>
+        </select>
+    </div>
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" name="reminder" {% if task[4] %}checked{% endif %}>
+        <label class="form-check-label">Set Reminder</label>
+    </div>
+    <div class="mb-3">
+        <label for="start_date" class="form-label">Start Date</label>
+        <input type="date" class="form-control" name="start_date" value="{{ task[7] }}">
+    </div>
+    <div class="mb-3">
+        <label for="end_date" class="form-label">End Date</label>
+        <input type="date" class="form-control" name="end_date" value="{{ task[6] }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

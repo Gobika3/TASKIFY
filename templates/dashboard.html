@@ -1,0 +1,371 @@
+{% extends "layout.html" %} {% block title %}Dashboard{% endblock %} {% block
+content %} {%if(session["role"]=="admin")%}
+<style>
+  /* Original CSS (kept intact) */
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .dashboard-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  .icon {
+    font-size: 40px;
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  .card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  /* New Enhanced Styling */
+  :root {
+    --primary: #4e73df;
+    --success: #1cc88a;
+    --warning: #f6c23e;
+    --info: #36b9cc;
+    --danger: #e74a3b;
+  }
+
+  .dashboard-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #2e3a4d;
+    position: relative;
+    display: inline-block;
+  }
+
+  .dashboard-container h1::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+
+  /* Card Enhancements */
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary);
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+
+  /* Individual Card Colors */
+  .card:nth-child(1) {
+    border-left-color: var(--primary);
+  }
+  .card:nth-child(1) .icon {
+    color: var(--primary);
+  }
+
+  .card:nth-child(2) {
+    border-left-color: var(--success);
+  }
+  .card:nth-child(2) .icon {
+    color: var(--success);
+  }
+
+  .card:nth-child(3) {
+    border-left-color: var(--warning);
+  }
+  .card:nth-child(3) .icon {
+    color: var(--warning);
+  }
+
+  .card:nth-child(4) {
+    border-left-color: var(--info);
+  }
+  .card:nth-child(4) .icon {
+    color: var(--info);
+  }
+
+  .card:nth-child(5) {
+    border-left-color: var(--danger);
+  }
+  .card:nth-child(5) .icon {
+    color: var(--danger);
+  }
+
+  /* Value Styling */
+  .card p {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #2e3a4d;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .cards {
+      gap: 15px;
+    }
+    .card {
+      width: 160px;
+      padding: 15px;
+    }
+    .icon {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .cards {
+      flex-direction: column;
+      align-items: center;
+    }
+    .card {
+      width: 80%;
+      max-width: 250px;
+    }
+  }
+
+  /* Animation */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+  }
+
+  .card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .card:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .card:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .card:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .card:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+</style>
+
+<div class="dashboard-container">
+  <h1>Admin Dashboard</h1>
+  <div class="cards">
+    <a href="{{ url_for('total_tasks') }}">
+      <div class="card">
+        <div class="icon">📋</div>
+        <h3>Total Tasks</h3>
+        <p>{{ total_tasks }}</p>
+      </div>
+    </a>
+    <a href="{{ url_for('today_tasks') }}">
+      <div class="card">
+        <div class="icon">📅</div>
+        <h3>Today's Tasks</h3>
+        <p>{{ today_tasks }}</p>
+      </div>
+    </a>
+    <a href="{{ url_for('due_tasks') }}">
+      <div class="card">
+        <div class="icon">⏳</div>
+        <h3>Due in 3 Days</h3>
+        <p>{{ three_day_tasks }}</p>
+      </div>
+    </a>
+    <a href="{{ url_for('personal_tasks') }}">
+      <div class="card">
+        <div class="icon">👤</div>
+        <h3>Personal Tasks</h3>
+        <p>{{ personal_tasks }}</p>
+      </div>
+    </a>
+    <a href="{{ url_for('group_tasks') }}">
+      <div class="card">
+        <div class="icon">👥</div>
+        <h3>Group Tasks</h3>
+        <p>{{ group_tasks }}</p>
+      </div>
+    </a>
+
+   
+    <a href="{{ url_for('viewusers') }}">
+      <!-- Optional: link to users page -->
+      <div class="card">
+        <div class="icon">🧑‍💼</div>
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+      </div>
+    </a>
+    <a href="{{ url_for('overdue_tasks') }}">
+      <div class="card">
+        <div class="icon">⏰</div>
+        <h3>Overdue Tasks</h3>
+        <p>{{ overdue_tasks }}</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+{% elif session["role"] == "user" %}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .dashboard-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    border-left: 4px solid #4e73df;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.4s ease forwards;
+    opacity: 0;
+  }
+  .card .icon {
+    font-size: 40px;
+    color: #4e73df;
+    margin-bottom: 10px;
+  }
+  .card p {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2e3a4d;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    color: #6c757d;
+  }
+  .dashboard-container h1 {
+    font-size: 2.5rem;
+    color: #2e3a4d;
+    margin-bottom: 2rem;
+    position: relative;
+    display: inline-block;
+  }
+  .dashboard-container h1::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: #4e73df;
+    border-radius: 2px;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="dashboard-container">
+  <h1>User Dashboard</h1>
+  <div class="cards">
+    <div class="card">
+      <div class="icon">📨</div>
+      <h3>Unread Messages</h3>
+      <p>{{ notification_count }}</p>
+    </div>
+    <div class="card">
+      <a href="{{ url_for('personal_tasksuser') }}">
+        <div class="icon">👤</div>
+        <h3>Personal Tasks</h3>
+        <p>{{ personal_tasks }}</p>
+      </a>
+    </div>
+    <div class="card">
+      <a href="{{ url_for('group_tasksuser') }}">
+        <div class="icon">👥</div>
+        <h3>Group Tasks</h3>
+        <p>{{ group_tasks }}</p>
+      </a>
+    </div>
+    
+    <a href="{{ url_for('todaypersonal_tasks') }}">
+      <div class="card">
+        <div class="icon">🔔</div>
+        <h3>Today’s Reminders</h3>
+        <p>{{ today_reminders }}</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+{% endif %} {% endblock %}

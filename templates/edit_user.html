@@ -1,0 +1,52 @@
+{% extends "layout.html" %} {% block title %}Edit User{% endblock %} {% block
+content %}
+<h2 class="mb-4">Edit User</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Username</label>
+    <input
+      type="text"
+      name="username"
+      value="{{ user[1] }}"
+      class="form-control"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input
+      type="email"
+      name="email"
+      value="{{ user[2] }}"
+      class="form-control"
+      required
+    />
+  </div>
+  <!-- <div class="mb-3">
+    <label class="form-label">Is Staff (0 or 1)</label>
+    <input
+      type="number"
+      name="is_staff"
+      value="{{ user[3] }}"
+      class="form-control"
+      min="0"
+      max="1"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Is Approved (0 or 1)</label>
+    <input
+      type="number"
+      name="isapproved"
+      value="{{ user[4] }}"
+      class="form-control"
+      min="0"
+      max="1"
+      required
+    />
+  </div> -->
+  <button type="submit" class="btn btn-primary">Update User</button>
+  <a href="{{ url_for('viewusers') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

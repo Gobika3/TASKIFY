@@ -1,0 +1,120 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<style>
+  .dashboard-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: 250px !important;
+  }
+
+  #timeFilter {
+    float: right;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+  label[for="timeFilter"] {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="mb-3 text-end">
+    <label for="timeFilter">Filter by Time:</label>
+    <select id="timeFilter">
+      <option value="all" {% if time_filter == 'all' %}selected{% endif %}>All</option>
+      <option value="today" {% if time_filter == 'today' %}selected{% endif %}>Today</option>
+      <option value="this_week" {% if time_filter == 'this_week' %}selected{% endif %}>This Week</option>
+      <option value="this_month" {% if time_filter == 'this_month' %}selected{% endif %}>This Month</option>
+      <option value="last_month" {% if time_filter == 'last_month' %}selected{% endif %}>Last Month</option>
+    </select>
+  </div>
+
+  <div class="dashboard-container">
+    <h3 class="text-center">User Task Overview</h3>
+    <canvas id="adminUserChart"></canvas>
+  </div>
+
+  <div class="dashboard-container">
+    <h3 class="text-center">Group Task Overview</h3>
+    <canvas id="adminGroupChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // User Chart Data
+  const userLabels = {{ user_data | map(attribute='name') | list | tojson }};
+  const userPending = {{ user_data | map(attribute='pending') | list | tojson }};
+  const userOntime = {{ user_data | map(attribute='ontime') | list | tojson }};
+  const userOverdue = {{ user_data | map(attribute='overdue') | list | tojson }};
+
+  const userChartData = {
+    labels: userLabels,
+    datasets: [
+      { label: 'Pending', data: userPending, backgroundColor: 'orange' },
+      { label: 'On-time Completed', data: userOntime, backgroundColor: 'green' },
+      { label: 'Overdue', data: userOverdue, backgroundColor: 'red' }
+    ]
+  };
+
+  new Chart(document.getElementById('adminUserChart'), {
+    type: 'bar',
+    data: userChartData,
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Group Chart Data
+  const groupLabels = {{ group_data | map(attribute='groupname') | list | tojson }};
+  const groupPending = {{ group_data | map(attribute='pending') | list | tojson }};
+  const groupOntime = {{ group_data | map(attribute='ontime') | list | tojson }};
+  const groupOverdue = {{ group_data | map(attribute='overdue') | list | tojson }};
+
+  const groupChartData = {
+    labels: groupLabels,
+    datasets: [
+      { label: 'Pending', data: groupPending, backgroundColor: 'orange' },
+      { label: 'On-time Completed', data: groupOntime, backgroundColor: 'green' },
+      { label: 'Overdue', data: groupOverdue, backgroundColor: 'red' }
+    ]
+  };
+
+  new Chart(document.getElementById('adminGroupChart'), {
+    type: 'bar',
+    data: groupChartData,
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Filter Event
+  document.getElementById("timeFilter").addEventListener("change", function () {
+    const selected = this.value;
+    window.location.href = `/chart?time=${selected}`;
+  });
+</script>
+{% endblock %}
